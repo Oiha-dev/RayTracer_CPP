@@ -7,13 +7,13 @@
 #include "header/hit.h"
 #include "header/world.h"
 
-sphere sphere_001 = sphere(point3(2.4479193687438965,   0.056793272495269775, 2.5536842346191406), 1.0, rayTracingMaterial(color(0.3515300452709198, 0.7991039156913757, 0.20507897436618805)));
-sphere sphere_002 = sphere(point3(4.336178779602051,    -0.7915282845497131, 2.131769895553589), 0.7008898854255676, rayTracingMaterial(color(0.22322599589824677, 0.46778416633605957, 0.6938720941543579)));
-sphere sphere_003 = sphere(point3(-0.22510182857513428, -0.1166074275970459, 2.9572179317474365), 1.3480886220932007, rayTracingMaterial(color(0.863153, 0.238398, 0.184475)));
-sphere sphere_004 = sphere(point3(5.566188335418701   , -2.099975347518921, 1.7639981508255005), 0.38122379779815674, rayTracingMaterial(color(0.010219560004770756, 0.010219560004770756, 0.010219560004770756)));
-sphere sun        = sphere(point3(3.5167737007141113  , -114.72481536865234, -3.469789981842041), 50, rayTracingMaterial(color(0, 0, 0), color(1, 1, 1), 10));
-sphere sphere_006 = sphere(point3(-4.518723011016846  , -1.7529833316802979, 3.2281835079193115), 2.1024038791656494, rayTracingMaterial(color(1.0, 1.0, 1.0)));
-sphere sphere_007 = sphere(point3(0.0               , 0.0, -77.6045913696289), 79.64906311035156, rayTracingMaterial(color(0.3402877748012543, 0.02465110644698143, 0.4506969153881073)));
+sphere sphere_001 = sphere(point3(2.5,  0,    2.5),   1.0, rayTracingMaterial(color(0.3, 0.8, 0.2)));
+sphere sphere_002 = sphere(point3(4.5,  -1,   2),     0.7, rayTracingMaterial(color(0.2, 0.5, 0.7)));
+sphere sphere_003 = sphere(point3(-0,   -0,   3),     1.3, rayTracingMaterial(color(0.9, 0.2, 0.2)));
+sphere sphere_004 = sphere(point3(5.5,  -2,   2),     0.3, rayTracingMaterial(color(0.1, 0.1, 0.1)));
+sphere sun        = sphere(point3(3.5,  -110, -3.5),  50,  rayTracingMaterial(color(0, 0, 0), color(1, 1, 1), 10));
+sphere sphere_006 = sphere(point3(-4.5, -2,   3.5),   2,   rayTracingMaterial(color(1.0, 1.0, 1.0)));
+sphere sphere_007 = sphere(point3(0.0,  0.0,  -77.5), 79.5,  rayTracingMaterial(color(0.3, 0.1, 0.5)));
 
 
 world world({sphere_001, sphere_002, sphere_003, sphere_004, sun, sphere_006, sphere_007});
@@ -71,9 +71,9 @@ int main() {
 
     // Camera
 
-    point3 lookfrom = point3(2.96203351020813, 7.020042419433594, 4.710366249084473);   // Point camera is looking from
-    point3 lookat   = point3(1.4069113731384277, 2.652738094329834, 2.837334632873535);  // Point camera is looking at
-    vec3   vup      = vec3(-0.12566393613815308, -0.35290011763572693, 0.927183985710144);     // Camera-relative "up" direction
+    point3 lookfrom = point3(3, 7, 4.7);   // Point camera is looking from
+    point3 lookat   = point3(1.4, 2.6, 2.8);  // Point camera is looking at
+    vec3   vup      = vec3(-0.1, -0.3, 0.9);     // Camera-relative "up" direction
     double vfov = 60;
 
     double focal_length = (lookfrom - lookat).length();
@@ -115,7 +115,7 @@ int main() {
             point3 pixel_center = pixel00_loc + (j * pixel_delta_u) + (i * pixel_delta_v);
             vec3 ray_direction = (pixel_center - camera_center).unit_vector();
 
-            for (int k = 0; k < rayPerPixel; k++) {
+            for (int k = 0; k < rayPerPixel + 1; k++) {
                 ray r(camera_center, ray_direction);
                 pixel_color += trace(r);
             }

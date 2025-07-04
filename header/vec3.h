@@ -32,6 +32,10 @@ public:
         return vec[2];
     }
 
+    vec3 operator-() const {
+        return vec3(-vec[0], -vec[1], -vec[2]);
+    }
+
     vec3& operator+=(vec3 const& other) {
         this->vec[0] = vec[0] + other.vec[0];
         this->vec[1] = vec[1] + other.vec[1];
@@ -89,7 +93,7 @@ public:
 
     }
 
-    vec3 unit_vector() {
+    vec3 unit_vector() const {
         vec3 res;
         double length = this->length();
         res.vec[0] = vec[0] / length;

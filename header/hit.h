@@ -1,15 +1,17 @@
 #ifndef HIT_H
 #define HIT_H
 #include "ray.h"
+#include "sphere.h"
 #include "vec3.h"
 
 class hitInfo {
 public:
-    hitInfo(bool did_hit, float dist, const point3 &hit_point, const vec3 &norm) {
+    hitInfo(bool did_hit, float dist, const point3 &hit_point, const vec3 &norm, const rayTracingMaterial &material) {
         didHit = did_hit;
         distance = dist;
         hitPoint = hit_point;
         normal = norm;
+        this->material = material;
     }
 
     hitInfo() {
@@ -17,12 +19,14 @@ public:
         distance = 0;
         hitPoint = vec3();
         normal = vec3();
+        material = rayTracingMaterial();
     }
 
     bool didHit;
     double distance;
     point3 hitPoint;
     vec3 normal;
+    rayTracingMaterial material;
 
 };
 
@@ -30,10 +34,10 @@ inline hitInfo hit_sphere(const point3& center, double radius, const ray& r) {
 
     hitInfo hit;
 
-    vec3 rayPos = r.getOrigin() - center;
-    vec3 rayDir = r.getDirection().unit_vector();
+    vec3 rayPos = r.origin - center;
+    vec3 rayDir = r.direction.unit_vector();
 
-    double result = rayPos.dot(rayDir) * rayPos.dot(r.getDirection()) - (rayPos.dot(rayPos) - radius * radius);
+    double result = rayPos.dot(rayDir) * rayPos.dot(rayDir) - (rayPos.dot(rayPos) - radius * radius);
 
     if (result >= 0) {
 

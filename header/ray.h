@@ -1,5 +1,8 @@
 #ifndef RAY_H
 #define RAY_H
+#include <random>
+
+#include "randomUtils.h"
 #include "vec3.h"
 
 class ray {
@@ -10,22 +13,33 @@ public:
         direction = dir;
     }
 
-    point3 getOrigin() const {
-        return origin;
-    }
-
-    vec3 getDirection() const {
-        return direction;
-    }
-
     point3 at(double t) const {
         return origin + t * direction;
     }
 
-
-private:
     point3 origin;
     vec3 direction;
 };
 
+inline point3 randomPointOnSphere(){
+    point3 res;
+
+    double u = randomDouble(-1, 1);
+    double angle = randomDouble(0, 2 * numbers::pi);
+
+    res.vec[0] = sqrt(1 - u*u) * cos(angle);
+    res.vec[1] = sqrt(1 - u*u) * sin(angle);
+    res.vec[2] = u;
+
+    return res;
+}
+
+
+inline vec3 randomHemisphereDirection(vec3& normal) {
+    vec3 randomVector = randomPointOnSphere();
+    if (normal.dot(randomVector) >= 0) {
+        return randomVector;
+    }
+    return vec3(0, 0, 0) - randomVector;
+}
 #endif //RAY_H

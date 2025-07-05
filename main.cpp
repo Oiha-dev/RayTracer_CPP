@@ -3,7 +3,8 @@
 #include "header/vec3.h"
 #include "header/world.h"
 
-int main() {
+
+int main(int argc, char *argv[]) {
 
     sphere sphere_001 = sphere(point3(2.5,  0,    2.5),   1.0, rayTracingMaterial(color(0.3, 0.8, 0.2)));
     sphere sphere_002 = sphere(point3(4.5,  -1,   2),     0.7, rayTracingMaterial(color(0.2, 0.5, 0.7)));
@@ -18,7 +19,7 @@ int main() {
     camera cam;
 
     cam.aspect_ratio = 16.0/9;
-    cam.image_width = 800;
+    cam.image_width = 1900;
 
     cam.lookfrom = point3(3, 7, 4.7);
     cam.lookat = point3(1.4, 2.6, 2.8);
@@ -26,7 +27,19 @@ int main() {
     cam.vfov = 60;
 
     cam.maxBounceCount = 10;
-    cam.rayPerPixel = 10;
+    cam.rayPerPixel = 1000;
+
+    if (argc > 1 && stoi(argv[1]) > 0) {
+        cam.rayPerPixel = stoi(argv[1]);
+    }
+
+
+    cam.threadCount = 12;
+
+
+    if (argc > 2 && stoi(argv[2]) > 0) {
+        cam.threadCount = stoi(argv[2]);
+    }
 
     cam.render(world);
 }

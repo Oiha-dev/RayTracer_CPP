@@ -3,54 +3,71 @@
 
 #include <fstream>
 #include <iostream>
+#include <thread>
 
 #include "color.h"
 #include "hit.h"
 #include "ray.h"
 #include "world.h"
 
-
 class camera {
 
 public:
     double aspect_ratio{};
-    unsigned int image_width{};
-    unsigned int maxBounceCount{};
-    unsigned int rayPerPixel{};
+    int image_width{};
+    int maxBounceCount{};
+    int rayPerPixel{};
+    int threadCount;
     point3 lookfrom;
     point3 lookat;
     vec3   vup;
     double vfov{};
 
     void render(world& world) {
+        std::clog << "Starting render..." << std::endl;
+
         initialise();
+
+        auto start_time = std::chrono::high_resolution_clock::now();
 
         // Render
         std::ofstream ImageFile("image.ppm");
 
         ImageFile << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
-        for (int i = 0; i < image_height; i++) {
-            std::clog << "\rScanlines remaining: " << (image_height - i) << ' ' << std::flush;
-            for (int j = 0; j < image_width; j++) {
+        vector<color> imageBuffer(image_width * image_height);
+        std::vector<std::thread> threads;
 
-                color pixel_color = color(0, 0, 0);
+        int total_pixels = image_width * image_height;
 
-                point3 pixel_center = pixel00_loc + (j * pixel_delta_u) + (i * pixel_delta_v);
-                vec3 ray_direction = (pixel_center - lookfrom).unit_vector();
+        std::clog << "Rendering " << total_pixels << " pixels with " << threadCount << " threads..." << std::endl;
 
-                for (int k = 0; k < rayPerPixel + 1; k++) {
-                    ray r(lookfrom, ray_direction);
-                    pixel_color += trace(r, world);
-                }
-                pixel_color /= rayPerPixel;
-                write_color(ImageFile, pixel_color);
-            }
+
+        for (int i = 0; i < threadCount; ++i) {
+            threads.emplace_back(&camera::calculateColorThread, this, i, std::ref(imageBuffer), std::ref(world));
         }
 
-        std::clog << "\rDone.                 \n";
+        for (auto& t : threads) {
+            t.join();
+        }
+
+        for (vec3 pixel : imageBuffer) {
+            write_color(ImageFile, pixel);
+        }
 
         ImageFile.close();
+
+        auto end_time = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::high_resolution_clock::now() - start_time;
+
+        auto ms_total = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+        auto minutes = ms_total / 60000;
+        auto seconds = (ms_total % 60000) / 1000;
+        auto milliseconds = ms_total % 1000;
+
+        std::clog << "\rDone in " << minutes << "m " << seconds << "s " << milliseconds << "ms.             \n";
+
+
     }
 
     void initialise() {
@@ -125,6 +142,38 @@ private:
         }
         return incomingLight;
     }
+
+    void calculateColorThread(int threadID, vector<color>& imageBuffer, const world& world) {
+        for (int k = threadID; k < imageBuffer.size(); k += threadCount) {
+            color pixel_color = color(0, 0, 0);
+
+            int i = k % image_width;
+            int j = k / image_width;
+
+
+            point3 pixel_center = pixel00_loc + (i * pixel_delta_u) + (j * pixel_delta_v);
+            vec3 ray_direction = (pixel_center - lookfrom).unit_vector();
+
+            for (int l = 0; l < rayPerPixel + 1; l++) {
+                ray r(lookfrom, ray_direction);
+                pixel_color += trace(r, world);
+            }
+            pixel_color /= rayPerPixel;
+            imageBuffer[k] = pixel_color;
+        }
+    }
 };
 
 #endif //CAMERA_H
+
+// color pixel_color = color(0, 0, 0);
+//
+// point3 pixel_center = pixel00_loc + (j * pixel_delta_u) + (i * pixel_delta_v);
+// vec3 ray_direction = (pixel_center - lookfrom).unit_vector();
+//
+// for (int k = 0; k < rayPerPixel + 1; k++) {
+//     ray r(lookfrom, ray_direction);
+//     pixel_color += trace(r, world);
+// }
+// pixel_color /= rayPerPixel;
+// write_color(ImageFile, pixel_color);

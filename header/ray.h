@@ -42,4 +42,9 @@ inline vec3 randomHemisphereDirection(vec3& normal) {
     }
     return vec3(0, 0, 0) - randomVector;
 }
+
+inline vec3 randomDirection() {
+    vec3 randomVector = randomPointOnSphere();
+    return vec3(0, 0, 0) - randomVector;
+}
 #endif //RAY_H

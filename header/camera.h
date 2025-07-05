@@ -129,8 +129,8 @@ private:
     };
 
     color globalIllumination(const ray& r) const {
-        double alignment = r.direction.unit_vector().dot(camera_up); // [-1, 1]
-        double t = 0.5 * (alignment + 1.0);                          // [0, 1]
+        double alignment = r.direction.unit_vector().dot(camera_up);
+        double t = 0.5 * (alignment + 1.0);
 
         color top = color(0.5, 0.7, 1.0);   // Sky
         color bottom = color(1.0, 1.0, 1.0); // Horizon
@@ -148,6 +148,7 @@ private:
             if (hit.didHit) {
                 r.origin = hit.hitPoint;
                 r.direction = randomHemisphereDirection(hit.normal);
+                //r.direction = (hit.normal + randomDirection()).unit_vector();
                 vec3 emittedLight = hit.material.emissionColor * hit.material.emissionStrength;
                 incomingLight += emittedLight * rayColor;
                 rayColor *= hit.material.materialColor;

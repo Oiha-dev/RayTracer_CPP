@@ -106,8 +106,19 @@ public:
 
 using point3 = vec3;
 
+inline vec3 lerp(vec3 &a, vec3 &b, double t) {
+    double x = a.x() + (b.x() - a.x()) * t;
+    double y = a.y() + (b.y() - a.y()) * t;
+    double z = a.z() + (b.z() - a.z()) * t;
+    return vec3(x, y, z);
+}
+
 inline vec3 operator+(const vec3& u, const vec3& v) {
     return vec3(u.vec[0] + v.vec[0], u.vec[1] + v.vec[1], u.vec[2] + v.vec[2]);
+}
+
+inline vec3 operator+(const vec3& u, const double other) {
+    return vec3(u.vec[0] + other, u.vec[1] + other, u.vec[2] + other);
 }
 
 inline vec3 operator-(const vec3& u, const vec3& v) {

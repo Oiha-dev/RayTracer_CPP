@@ -42,9 +42,10 @@ public:
 
         std::clog << "Rendering " << total_pixels << " pixels with " << threadCount << " threads..." << std::endl;
 
+        std::atomic<int> completedPixels = 0;
 
         for (int i = 0; i < threadCount; ++i) {
-            threads.emplace_back(&camera::calculateColorThread, this, i, std::ref(imageBuffer), std::ref(world));
+            threads.emplace_back(&camera::calculateColorThread, this, i, std::ref(imageBuffer), std::ref(world), std::ref(completedPixels));
         }
 
         for (auto& t : threads) {
@@ -87,6 +88,8 @@ public:
         vec3 u = vup.cross(w).unit_vector();
         vec3 v = w.cross(u);
 
+        this->camera_up = v;
+
         // Calculate the vectors across the horizontal and down the vertical viewport edges.
         vec3 viewport_u = viewport_width * u;    // Vector across viewport horizontal edge
         vec3 viewport_v = viewport_height * -v;  // Vector down viewport vertical edge
@@ -106,6 +109,7 @@ private:
     vec3 pixel00_loc;
     vec3 pixel_delta_u;
     vec3 pixel_delta_v;
+    vec3 camera_up;
 
     static hitInfo calculateClosestHit(const ray& r, const world& world) {
         hitInfo closestHit;
@@ -124,6 +128,17 @@ private:
         return closestHit;
     };
 
+    color globalIllumination(const ray& r) const {
+        double alignment = r.direction.unit_vector().dot(camera_up); // [-1, 1]
+        double t = 0.5 * (alignment + 1.0);                          // [0, 1]
+
+        color top = color(0.5, 0.7, 1.0);   // Sky
+        color bottom = color(1.0, 1.0, 1.0); // Horizon
+
+        return (1.0 - t) * bottom + t * top;
+    }
+
+
     color trace(ray &r, const world& world) const {
         color rayColor = color(1, 1, 1);
         color incomingLight = color(0, 0,0);
@@ -137,13 +152,14 @@ private:
                 incomingLight += emittedLight * rayColor;
                 rayColor *= hit.material.materialColor;
             } else {
+                incomingLight += globalIllumination(r) * rayColor;
                 break;
             }
         }
         return incomingLight;
     }
 
-    void calculateColorThread(int threadID, vector<color>& imageBuffer, const world& world) {
+    void calculateColorThread(int threadID, vector<color>& imageBuffer, const world& world, std::atomic<int>& completed_pixels) {
         for (int k = threadID; k < imageBuffer.size(); k += threadCount) {
             color pixel_color = color(0, 0, 0);
 
@@ -160,20 +176,15 @@ private:
             }
             pixel_color /= rayPerPixel;
             imageBuffer[k] = pixel_color;
+
+            completed_pixels.fetch_add(1, std::memory_order_relaxed);
+
+            if (threadID == 1) {
+                int progress = 100.0 * completed_pixels / (image_width * image_height);
+                clog << "\rProgress: " << progress << "%" << std::flush;
+            }
         }
     }
 };
 
 #endif //CAMERA_H
-
-// color pixel_color = color(0, 0, 0);
-//
-// point3 pixel_center = pixel00_loc + (j * pixel_delta_u) + (i * pixel_delta_v);
-// vec3 ray_direction = (pixel_center - lookfrom).unit_vector();
-//
-// for (int k = 0; k < rayPerPixel + 1; k++) {
-//     ray r(lookfrom, ray_direction);
-//     pixel_color += trace(r, world);
-// }
-// pixel_color /= rayPerPixel;
-// write_color(ImageFile, pixel_color);

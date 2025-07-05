@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
     camera cam;
 
     cam.aspect_ratio = 16.0/9;
-    cam.image_width = 1900;
+    cam.image_width = 1920;
 
     cam.lookfrom = point3(3, 7, 4.7);
     cam.lookat = point3(1.4, 2.6, 2.8);
@@ -27,19 +27,9 @@ int main(int argc, char *argv[]) {
     cam.vfov = 60;
 
     cam.maxBounceCount = 10;
-    cam.rayPerPixel = 1000;
-
-    if (argc > 1 && stoi(argv[1]) > 0) {
-        cam.rayPerPixel = stoi(argv[1]);
-    }
-
+    cam.rayPerPixel = 10000;
 
     cam.threadCount = 12;
-
-
-    if (argc > 2 && stoi(argv[2]) > 0) {
-        cam.threadCount = stoi(argv[2]);
-    }
 
     cam.render(world);
 }

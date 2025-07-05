@@ -4,8 +4,8 @@
 #include <random>
 
 inline std::mt19937& getEngine() {
-    static std::random_device rd;
-    static std::mt19937 engine(rd());
+    thread_local static std::random_device rd;
+    thread_local static std::mt19937 engine(rd());
     return engine;
 }
 

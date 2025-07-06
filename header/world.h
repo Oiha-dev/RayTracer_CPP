@@ -2,7 +2,7 @@
 #define WORLD_H
 #include <list>
 
-#include "sphere.h"
+#include "object.h"
 
 
 class world {

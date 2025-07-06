@@ -32,4 +32,11 @@ struct sphere {
     rayTracingMaterial material;
 };
 
+struct triangle {
+
+    vec3 position[3];
+    vec3 normal;
+    rayTracingMaterial material;
+};
+
 #endif //SPHERE_H

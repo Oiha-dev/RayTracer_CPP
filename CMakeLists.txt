@@ -8,7 +8,7 @@ add_executable(RayTracer_CPP main.cpp
         header/color.h
         header/ray.h
         header/hit.h
-        header/sphere.h
+        header/object.h
         header/world.h
         header/randomUtils.h
         header/camera.h)

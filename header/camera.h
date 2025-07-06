@@ -117,12 +117,23 @@ private:
 
         for (sphere sphere : world.spheres) {
 
-            hitInfo hit = hit_sphere(sphere.position, sphere.radius, r);
+            hitInfo hit = hitSphere(sphere.position, sphere.radius, r);
 
             if (hit.didHit == true && hit.distance < closestHit.distance) {
                 closestHit = hit;
                 closestHit.material = sphere.material;
             }
+        }
+
+        triangle triangle({point3(-0.37602 , -1.53713, 5.59571), point3(0.94411, -3.05402, 3.60666), point3(1.08669, -2.90112, 5.59571)}, vec3{0, 0, 1}, rayTracingMaterial(color(0.3, 0.8, 0.2)));;
+
+        triangle.normal = (triangle.position[1] - triangle.position[0]).cross(triangle.position[2] - triangle.position[0]).unit_vector();
+
+        hitInfo hitTri = hitTriangle(triangle, r);
+
+        if (hitTri.didHit == true && hitTri.distance < closestHit.distance) {
+            closestHit = hitTri;
+            closestHit.material = triangle.material;
         }
 
         return closestHit;

@@ -1,42 +1,20 @@
-#ifndef SPHERE_H
-#define SPHERE_H
-#include "vec3.h"
+#ifndef OBJECT_H
+#define OBJECT_H
 
-struct rayTracingMaterial {
-    rayTracingMaterial(const vec3 &color, const vec3 &emission_color, double emission_strength)
-        : materialColor(color),
-          emissionColor(emission_color),
-          emissionStrength(emission_strength) {
-    }
+#include "ray.h"
+#include "material.h"
 
-    explicit rayTracingMaterial(const vec3 &color)
-    : materialColor(color),
-      emissionColor(0, 0, 0),
-      emissionStrength(0) {
-    }
-
-    explicit rayTracingMaterial()
-    : materialColor(color(0, 0, 0)),
-      emissionColor(0, 0, 0),
-      emissionStrength(0) {
-    }
-
-    vec3 materialColor;
-    vec3 emissionColor;
-    double emissionStrength;
-};
-
-struct sphere {
-    vec3 position;
-    double radius;
+class object {
+public:
     rayTracingMaterial material;
+
+    explicit object(const rayTracingMaterial& mat) {
+        this->material = mat;
+    }
+
+    virtual ~object() = default;
+
+    virtual hitInfo hit(const ray& r) const = 0;
 };
 
-struct triangle {
-
-    vec3 position[3];
-    vec3 normal;
-    rayTracingMaterial material;
-};
-
-#endif //SPHERE_H
+#endif // OBJECT_H

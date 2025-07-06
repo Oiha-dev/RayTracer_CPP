@@ -11,7 +11,10 @@ add_executable(RayTracer_CPP main.cpp
         header/object.h
         header/world.h
         header/randomUtils.h
-        header/camera.h)
+        header/camera.h
+        header/material.h
+        header/sphere.h
+        header/triangle.h)
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(RayTracer_CPP PRIVATE -O3 -march=native -ftree-vectorizer-verbose=2 )

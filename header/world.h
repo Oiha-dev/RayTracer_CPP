@@ -1,19 +1,18 @@
 #ifndef WORLD_H
 #define WORLD_H
-#include <list>
+#include <memory>
+#include <utility>
 
 #include "object.h"
 
 
 class world {
 public:
-    world(const list<sphere> &spheres){
-        this->spheres = spheres;
-        numSpheres = spheres.size();
-    }
+    std::vector<std::shared_ptr<object>> objects;
 
-    list<sphere> spheres;
-    unsigned int numSpheres;
+    explicit world(std::vector<std::shared_ptr<object>> objs) {
+        objects = std::move(objs);
+    }
 };
 
 #endif //WORLD_H

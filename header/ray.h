@@ -1,5 +1,4 @@
-#ifndef RAY_H
-#define RAY_H
+#pragma once
 #include <random>
 
 #include "randomUtils.h"
@@ -7,7 +6,6 @@
 
 class ray {
 public:
-
     ray(point3& orig, vec3 dir) {
         origin = orig;
         direction = dir;
@@ -25,7 +23,7 @@ inline point3 randomPointOnSphere(){
     point3 res;
 
     double u = randomDouble(-1, 1);
-    double angle = randomDouble(0, 2 * numbers::pi);
+    double angle = randomDouble(0, 2 * std::numbers::pi);
 
     res.vec[0] = sqrt(1 - u*u) * cos(angle);
     res.vec[1] = sqrt(1 - u*u) * sin(angle);
@@ -47,4 +45,3 @@ inline vec3 randomDirection() {
     vec3 randomVector = randomPointOnSphere();
     return vec3(0, 0, 0) - randomVector;
 }
-#endif //RAY_H

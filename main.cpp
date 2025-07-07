@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
     cam.vfov = 60;
 
     cam.maxBounceCount = 10;
-    cam.rayPerPixel = 1000;
+    cam.rayPerPixel = 100;
 
     cam.threadCount = 12;
 

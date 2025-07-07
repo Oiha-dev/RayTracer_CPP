@@ -1,5 +1,4 @@
-#ifndef RANDOMUTILS_H
-#define RANDOMUTILS_H
+#pragma once
 
 #include <random>
 
@@ -13,5 +12,3 @@ inline double randomDouble(double min, double max) {
     std::uniform_real_distribution dist(min, max);
     return dist(getEngine());
 }
-
-#endif // RANDOMUTILS_H

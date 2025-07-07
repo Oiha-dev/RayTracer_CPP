@@ -1,18 +1,11 @@
-#ifndef WORLD_H
-#define WORLD_H
+#pragma once
+
 #include <memory>
-#include <utility>
-
 #include "object.h"
-
 
 class world {
 public:
     std::vector<std::shared_ptr<object>> objects;
 
-    explicit world(std::vector<std::shared_ptr<object>> objs) {
-        objects = std::move(objs);
-    }
+    explicit world(std::vector<std::shared_ptr<object>> objs);
 };
-
-#endif //WORLD_H

@@ -1,5 +1,7 @@
 #include "header/vec3.h"
 #include <cmath>
+#include <ostream>
+
 
 vec3::vec3() {
     vec[0] = 0;
@@ -21,6 +23,10 @@ double vec3::z() const { return vec[2]; }
 
 vec3 vec3::operator-() const {
     return vec3(-vec[0], -vec[1], -vec[2]);
+}
+
+double& vec3::operator[](int i) {
+    return vec[i];
 }
 
 vec3& vec3::operator+=(const vec3& other) {
@@ -86,38 +92,36 @@ vec3 vec3::unit_vector() const {
     return *this / this->length();
 }
 
-// vec3 lerp(vec3& a, vec3& b, double t) {
-//     return vec3(
-//         a.x() + (b.x() - a.x()) * t,
-//         a.y() + (b.y() - a.y()) * t,
-//         a.z() + (b.z() - a.z()) * t
-//     );
-// }
-//
-// vec3 operator+(const vec3& u, const vec3& v) {
-//     return vec3(u.x() + v.x(), u.y() + v.y(), u.z() + v.z());
-// }
-//
-// vec3 operator+(const vec3& u, double other) {
-//     return vec3(u.x() + other, u.y() + other, u.z() + other);
-// }
-//
-// vec3 operator-(const vec3& u, const vec3& v) {
-//     return vec3(u.x() - v.x(), u.y() - v.y(), u.z() - v.z());
-// }
-//
-// vec3 operator*(const vec3& u, const vec3& v) {
-//     return vec3(u.x() * v.x(), u.y() * v.y(), u.z() * v.z());
-// }
-//
-// vec3 operator*(double t, const vec3& v) {
-//     return vec3(t * v.x(), t * v.y(), t * v.z());
-// }
-//
-// vec3 operator*(const vec3& v, double t) {
-//     return t * v;
-// }
-//
-// vec3 operator/(const vec3& v, double t) {
-//     return (1 / t) * v;
-// }
+vec3 lerp(vec3& a, vec3& b, double t) {
+    return vec3(
+        a.x() + (b.x() - a.x()) * t,
+        a.y() + (b.y() - a.y()) * t,
+        a.z() + (b.z() - a.z()) * t
+    );
+}
+
+std::ostream& operator<<(std::ostream& out, const vec3& v){
+    return out << v.x() << " " << v.y() << " " << v.z();
+}
+
+vec3 operator+(const vec3& u, const vec3& v) {
+    return vec3(u.x() + v.x(), u.y() + v.y(), u.z() + v.z());
+}
+vec3 operator+(const vec3& u, double other) {
+    return vec3(u.x() + other, u.y() + other, u.z() + other);
+}
+vec3 operator-(const vec3& u, const vec3& v) {
+    return vec3(u.x() - v.x(), u.y() - v.y(), u.z() - v.z());
+}
+vec3 operator*(const vec3& u, const vec3& v) {
+    return vec3(u.x() * v.x(), u.y() * v.y(), u.z() * v.z());
+}
+vec3 operator*(double t, const vec3& v) {
+    return vec3(t * v.x(), t * v.y(), t * v.z());
+}
+vec3 operator*(const vec3& v, double t) {
+    return t * v;
+}
+vec3 operator/(const vec3& v, double t) {
+    return (1 / t) * v;
+}

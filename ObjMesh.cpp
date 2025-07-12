@@ -64,12 +64,10 @@ void ObjMesh::populateTriangles(string& filePath) {
         }
     }
 
-    cout << maxSize;
-
     for (auto tri : triangles) {
-        tri->vertices[0] = tri->vertices[0] / maxSize * scale + coordinates;
-        tri->vertices[1] = tri->vertices[1] / maxSize * scale + coordinates;
-        tri->vertices[2] = tri->vertices[2] / maxSize * scale + coordinates;
+        tri->vertices[0] = tri->vertices[0] * scale + coordinates;
+        tri->vertices[1] = tri->vertices[1] * scale + coordinates;
+        tri->vertices[2] = tri->vertices[2] * scale + coordinates;
     }
 
 

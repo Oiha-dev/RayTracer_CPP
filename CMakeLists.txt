@@ -4,7 +4,6 @@ project(RayTracer_CPP)
 set(CMAKE_CXX_STANDARD 26)
 
 file(GLOB Sources *.cpp)
-file(GLOB Headers header/*.h)
 
 include_directories(header)
 

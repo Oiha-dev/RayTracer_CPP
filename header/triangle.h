@@ -1,5 +1,5 @@
-#ifndef TRIANGLE_H
-#define TRIANGLE_H
+#pragma once
+
 #include "hit.h"
 #include "object.h"
 
@@ -11,11 +11,9 @@ public:
     triangle(const point3& a, const point3& b, const point3& c, const rayTracingMaterial& mat);
     hitInfo hit(const ray& r) const override;
 
-private:
+protected:
     
     static double triangleArea(const point3& a, const point3& b, const point3& c);
     bool isPointInTriangle(const point3& point) const;
 
 };
-
-#endif //TRIANGLE_H

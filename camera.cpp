@@ -151,7 +151,7 @@ void camera::calculateColorThread(int threadID, vector<color>& imageBuffer, cons
 
         completed_pixels.fetch_add(1, std::memory_order_relaxed);
 
-        if (threadID == 1) {
+        if (threadID == 0) {
             int progress = 100.0 * completed_pixels / (image_width * image_height);
             clog << "\rProgress: " << progress << "%" << std::flush;
         }

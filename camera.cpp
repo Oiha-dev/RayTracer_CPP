@@ -12,7 +12,7 @@ void camera::render(world& world) {
     auto start_time = std::chrono::high_resolution_clock::now();
 
     // Render
-    std::ofstream ImageFile("images/image.ppm");
+    std::ofstream ImageFile("image.ppm");
 
     ImageFile << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 

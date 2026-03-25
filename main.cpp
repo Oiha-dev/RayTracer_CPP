@@ -5,22 +5,19 @@
 #include "header/vec3.h"
 #include "header/world.h"
 
-#include "header/CLI11.hpp"
-
 int main(int argc, char *argv[]) {
-    CLI::App app{"Ray Tracer CLI Configuration"};
 
     int image_width = 200;
     int max_bounce_count = 10;
     int rays_per_pixel = 5;
     int thread_count = 1;
 
-    app.add_option("--image-width", image_width, "Width of the output image (pixels)")->check(CLI::PositiveNumber);
-    app.add_option("--max-bounce", max_bounce_count, "Maximum number of ray bounces")->check(CLI::PositiveNumber);
-    app.add_option("--ray-per-pixel", rays_per_pixel, "Number of rays per pixel for sampling")->check(CLI::PositiveNumber);
-    app.add_option("--threads", thread_count, "Number of threads to use for rendering")->check(CLI::PositiveNumber);
-
-    CLI11_PARSE(app, argc, argv);
+    if (argc == 5) {
+        image_width = std::stoi(argv[1]);
+        max_bounce_count = std::stoi(argv[2]);
+        rays_per_pixel = std::stoi(argv[3]);
+        thread_count = std::stoi(argv[4]);
+    }
 
     string filename = "mesh/suzanne.obj";
     auto Cube = std::make_shared<ObjMesh>(ObjMesh(filename, point3(0,  0,   3.2), 1, rayTracingMaterial(color(0.9, 0.2, 0.2))));
